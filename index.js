@@ -25,12 +25,27 @@ app.get("/wishes", async (req, res) => {
 app.post("/wishes", async (req, res) => {
   const { name, price } = req.body;
 
+if (typeof name !== "string" || name.trim() === "") {
+    return res.status(400).json({
+      error: "Name is required",
+    });
+  }
+
+if (typeof price !== "number" ||
+    !Number.isFinite(price) ||
+    price < 0
+  ) {
+    return res.status(400).json({
+      error: "Price must be a non-negative number",
+    });
+  }
+
   try {
     const result = await pool.query(
       `INSERT INTO wishes (name, price)
        VALUES ($1, $2)
        RETURNING *`,
-      [name, price]
+      [name.trim(), price]
     );
 
     res.status(201).json(result.rows[0]);
