@@ -56,6 +56,27 @@ if (typeof price !== "number" ||
     });
   }
 });
+app.put("/wishes/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  const { name, price, bought } = req.body;
+
+  try {
+    const result = await pool.query(
+      `UPDATE wishes
+       SET name = $1, price = $2, bought = $3
+       WHERE id = $4
+       RETURNING *`,
+      [name, price, bought, id]
+    );
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Could not update wish:", error);
+    res.status(500).json({
+      error: "Could not update wish",
+    });
+  }
+});
 app.listen(port, () => {
   console.log(`MyWishlist backend is running on port ${port}`);
 });
