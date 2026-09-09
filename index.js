@@ -59,6 +59,30 @@ if (typeof price !== "number" ||
 app.put("/wishes/:id", async (req, res) => {
   const id = Number(req.params.id);
   const { name, price, bought } = req.body;
+  if (!Number.isInteger(id) || id <= 0) {
+  return res.status(400).json({
+    error: "ID must be a positive integer",
+  });
+}
+if (typeof name !== "string" || name.trim() === "") {
+  return res.status(400).json({
+    error: "Name is required",
+  });
+}
+if (
+  typeof price !== "number" ||
+  !Number.isFinite(price) ||
+  price < 0
+) {
+  return res.status(400).json({
+    error: "Price must be a non-negative number",
+  });
+}
+if (typeof bought !== "boolean") {
+  return res.status(400).json({
+    error: "Bought must be true or false",
+  });
+}
 
   try {
     const result = await pool.query(
@@ -66,8 +90,14 @@ app.put("/wishes/:id", async (req, res) => {
        SET name = $1, price = $2, bought = $3
        WHERE id = $4
        RETURNING *`,
-      [name, price, bought, id]
+      [name.trim(), price, bought, id]
     );
+    if (result.rows.length === 0) {
+  return res.status(404).json({
+    error: "Wish not found",
+  });
+}
+
 
     res.json(result.rows[0]);
   } catch (error) {
