@@ -107,6 +107,36 @@ if (typeof bought !== "boolean") {
     });
   }
 });
+app.delete("/wishes/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id <= 0) {
+  return res.status(400).json({
+    error: "ID must be a positive integer",
+  });
+}
+
+  try {
+    const result = await pool.query(
+      `DELETE FROM wishes
+       WHERE id = $1
+       RETURNING *`,
+      [id]
+    );
+
+
+    if (result.rows.length === 0) {
+  return res.status(404).json({
+    error: "Wish not found",
+  });
+}
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Could not delete wish:", error);
+    res.status(500).json({
+      error: "Could not delete wish",
+    });
+  }
+});
 app.listen(port, () => {
   console.log(`MyWishlist backend is running on port ${port}`);
 });
