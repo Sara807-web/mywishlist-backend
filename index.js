@@ -1,11 +1,15 @@
 const express = require("express");
 const pool = require("./db");
+const cors = require("cors");
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 const port = 3000;
 
+
 app.get("/", (req, res) => {
+  
   res.send("Welcome to the MyWishlist API");
 });
 app.get("/wishes", async (req, res) => {
