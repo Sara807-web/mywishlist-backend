@@ -49,11 +49,11 @@ app.post("/wishes", async (req, res) => {
   }
   try {
     const result = await pool.query(
-  `INSERT INTO wishes (name, price, priority)
+      `INSERT INTO wishes (name, price, priority)
    VALUES ($1, $2, $3)
    RETURNING *`,
-  [name.trim(), price, priority]
-);
+      [name.trim(), price, priority]
+    );
 
     res.status(201).json(result.rows[0]);
   } catch (error) {
@@ -65,7 +65,7 @@ app.post("/wishes", async (req, res) => {
 });
 app.put("/wishes/:id", async (req, res) => {
   const id = Number(req.params.id);
-  const { name, price, bought } = req.body;
+  const { name, price, bought, priority } = req.body;
   if (!Number.isInteger(id) || id <= 0) {
     return res.status(400).json({
       error: "ID must be a positive integer",
@@ -91,14 +91,21 @@ app.put("/wishes/:id", async (req, res) => {
     });
   }
 
+  if (priority !== "high" && priority !== "low") {
+    return res.status(400).json({
+      error: "Priority must be high or low",
+    });
+  }
+
   try {
     const result = await pool.query(
       `UPDATE wishes
-       SET name = $1, price = $2, bought = $3
-       WHERE id = $4
+       SET name = $1, price = $2, bought = $3, priority = $4
+       WHERE id = $5
        RETURNING *`,
-      [name.trim(), price, bought, id]
+      [name.trim(), price, bought, priority, id]
     );
+
     if (result.rows.length === 0) {
       return res.status(404).json({
         error: "Wish not found",
