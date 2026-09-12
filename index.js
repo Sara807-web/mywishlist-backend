@@ -15,7 +15,8 @@ app.get("/", (req, res) => {
 app.get("/wishes", async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM wishes ORDER BY id"
+      `SELECT * FROM wishes
+      ORDER BY CASE WHEN priority = 'high' THEN 0 ELSE 1 END, id`
     );
 
     res.json(result.rows);
