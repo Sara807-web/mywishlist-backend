@@ -8,9 +8,10 @@ app.use(express.json());
 const port = process.env.PORT || 3000;
 
 
-app.get("/", (req, res) => {
-
-  res.send("Welcome to the MyWishlist API");
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+  });
 });
 app.get("/wishes", async (req, res) => {
   try {
