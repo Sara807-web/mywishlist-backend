@@ -153,6 +153,11 @@ app.delete("/wishes/:id", async (req, res) => {
     });
   }
 });
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Route not found",
+  });
+});
 app.listen(port, () => {
   console.log(`MyWishlist backend is running on port ${port}`);
 });
