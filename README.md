@@ -120,3 +120,14 @@ seed.sql     optionale Beispieldaten
 Das zugehörige Angular-Frontend befindet sich in einem separaten Repository:
 
 https://github.com/Sara807-web/mywishlist-frontend 
+
+## Verwendete KI-Werkzeuge
+
+Bei der Entwicklung dieses Projekts wurde **OpenAI Codex/ChatGPT** unterstützend eingesetzt:
+
+- schrittweise Planung der Backend-Funktionen
+- Erklärung von Node.js, Express und PostgreSQL
+- Unterstützung bei Fehlersuche und API-Tests
+- Unterstützung bei Git und der Dokumentation
+
+Alle Backend-Funktionen wurden während der Entwicklung praktisch getestet. Der Code wird für das abschließende Fachgespräch eigenständig nachvollzogen und vorbereitet.
