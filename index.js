@@ -35,6 +35,11 @@ app.post("/wishes", async (req, res) => {
       error: "Name is required",
     });
   }
+  if (name.trim().length > 255) {
+    return res.status(400).json({
+      error: "Name must not exceed 255 characters",
+    });
+  }
 
   if (typeof price !== "number" ||
     !Number.isFinite(price) ||
@@ -76,6 +81,11 @@ app.put("/wishes/:id", async (req, res) => {
   if (typeof name !== "string" || name.trim() === "") {
     return res.status(400).json({
       error: "Name is required",
+    });
+  }
+  if (name.trim().length > 255) {
+    return res.status(400).json({
+      error: "Name must not exceed 255 characters",
     });
   }
   if (
